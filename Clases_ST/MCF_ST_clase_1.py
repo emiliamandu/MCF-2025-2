@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
-from scipy.stats import kurtosis, skew
+import scipy.stats as stats
+from scipy.stats import kurtosis, skew, shapiro
 
 st.title("Visualización de Rendimientos de Acciones")
 st.header("Streamlit clase 1 ")
@@ -60,31 +61,25 @@ if stock_seleccionado:
     ax.set_ylabel("Frecuencia")
     st.pyplot(fig)
 
-# import streamlit as st
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import Funciones_MCF as MCF
-# from scipy.stats import kurtosis, skew
+    st.subheader("Test de Normalidad (Shapiro-Wilk)")
+    stat, p = shapiro(df_rendimientos[stock_seleccionado])
 
-# st.title("Streamlit Clase 1")
-# st.header("Visualizacion de Activos")
+    st.write(f"**Shapiro-Wilk Test Statistic:** {stat:.4f}")
+    st.write(f"**P-value:** {p:.4f}")
 
-# lista_de_stocks = ['AAPL','NVDA','GOOGL','TSLA','AMZN','MSFT']
+    # Interpretación del test
+    alpha = 0.05
+    if p > alpha:
+        st.success("La distribución parece ser normal (No se rechaza H0)")
+    else:
+        st.error("La distribución NO es normal (Se rechaza H0)")
 
-# with st.spinner("Descargando datos..."):
-#     df_precios = MCF.obtener_datos(lista_de_stocks)
-#     df_rendimientos = MCF.calcular_rendimientos(df_precios)
+    st.subheader("Q-Q Plot de Rendimientos")
 
-# stock_seleccionado = st.selectbox("Selecciona una acción" , lista_de_stocks)
-
-# if stock_seleccionado:
-#     st.subheader(f"Métricas de Rendimiento: {stock_seleccionado}")
-#     rendimiento_promedio = (df_rendimientos[stock_seleccionado]).mean()
-#     deviacion_estandar = df_rendimientos[stock_seleccionado].std()
-
-#     col1, col2 = st.columns(2)
-#     col1.metric("Remdimiento Medio Diario", f"{rendimiento_promedio:.4%}")
-#     col2.metric("Desviacion Estandar",f"{volatilidad:.4%}")
+    fig, ax = plt.subplots(figsize=(6, 6))
+    stats.probplot(df_rendimientos[stock_seleccionado], dist="norm", plot=ax)
+    ax.set_title("Q-Q Plot de los Rendimientos")
+    st.pyplot(fig)
 
 
 
