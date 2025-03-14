@@ -3,7 +3,7 @@ import numpy as np
 import Funciones_MCF as MCF
 import streamlit as st
 import matplotlib.pyplot as plt
-from scipy.stats import kurtosis, skew
+from scipy.stats import kurtosis, skew, shapiro
 
 
 '''
@@ -43,6 +43,29 @@ if stock_seleccionado:
     ax.set_xlabel("Fecha")
     ax.set_ylabel("Rendimiento Diario")
     st.pyplot(fig)
+
+    # Histograma 
+    st.subheader(f'Histograma de Rendimientos : {stock_seleccionado}')
+    fig,ax = plt.subplots(figsize =(10,5))
+    ax.hist(df_rendimientos[stock_seleccionado],bins=50,alpha=0.5,color = 'green')
+    ax.set_title('Histograma')
+    ax.set_xlabel('Rendimiento Diario')
+    ax.set_ylabel('Frecuencia')
+    st.pyplot(fig)
+
+    st.subheader('Test de Normalidad (Shapiro-Wilk)')
+
+    stat , p = shapiro(df_rendimientos[stock_seleccionado])
+    st.write(f'Shapirop-Wilk Test : {stat:.4}' )
+    st.write(f'P_value : {p:.6}')
+
+
+
+
+
+
+
+
 
 
 
