@@ -8,7 +8,7 @@ from scipy.stats import kurtosis, skew, shapiro ,norm
 
 st.title("Visualización de Rendimientos de Acciones")
 st.header("Streamlit clase 1 ")
-
+st.write('hola')
 @st.cache_data
 def obtener_datos(stocks):
     df = yf.download(stocks, period="1y")['Close']
